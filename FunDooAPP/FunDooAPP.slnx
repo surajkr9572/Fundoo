@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../BessinessLogicLayer/BessinessLogicLayer.csproj" Id="b305fa3f-197d-4790-ae01-a5334dbb676d" />
+  <Project Path="../DataLogicLayer/DataLogicLayer.csproj" Id="05741fb1-da7e-45d6-b405-8d0a98b026c7" />
+  <Project Path="../ModelLayer/ModelLayer.csproj" Id="07c1319d-3df8-4a3a-8a95-86f17db8ab93" />
+  <Project Path="FunDooAPP.csproj" />
+</Solution>
