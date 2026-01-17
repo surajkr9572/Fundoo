@@ -11,12 +11,9 @@ namespace ModelLayer.Dto
     {
         public int CollaboratorId { get; set; }
         public int NoteId { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        [MaxLength(255, ErrorMessage = "Email cannot exceed 255 character")]
-        public string Email { get; set; } = null!;
+        public string Email { get; set; }
 
-        public DateTime? AddedAt { get; set; }
+        public DateTime AddedAt { get; set; }
 
 
     }

@@ -23,5 +23,6 @@ namespace ModelLayer.Entities
         public int NoteId { get; set; }
         public User User { get;set; }
         public Note Note { get;set; }
+
     }
 }

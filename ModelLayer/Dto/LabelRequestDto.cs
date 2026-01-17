@@ -12,7 +12,7 @@ namespace ModelLayer.Dto
         [Required(ErrorMessage = "Label Name is required")]
         [MaxLength(100, ErrorMessage = "Label Name cannot exceed 100 characters")]
         public string LabelName { get; set; } = null!;
-        public int? NotesId { get; set; }
+        public int NotesId { get; set; }
 
     }
 }
