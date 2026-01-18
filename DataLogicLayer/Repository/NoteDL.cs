@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace DataLogicLayer.Repository
 {
-    public class NoteBL : INoteBL
+    public class NoteDL : INoteDL
     {
         private readonly ApplicationDbContext context;
-        public NoteBL(ApplicationDbContext context)
+        public NoteDL(ApplicationDbContext context)
         {
             this.context = context;
         }

@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace DataLogicLayer.Repository
 {
-    public class LabelBL: ILabel
+    public class LabelDL: ILabelDL
     {
         private readonly ApplicationDbContext context;
-        public LabelBL(ApplicationDbContext context)
+        public LabelDL(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -67,5 +67,4 @@ namespace DataLogicLayer.Repository
 
     }
 
-    }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLogicLayer.Interface
 {
-    public interface ILabel
+    public interface ILabelDL
     {
         Task<Label>CreateLabelAsync(Label label);
         Task<IEnumerable<Label>> GetAllLabelAsync(int userId);

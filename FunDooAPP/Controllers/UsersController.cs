@@ -49,25 +49,19 @@ namespace FunDooAPP.Controllers
 
         // Login user
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserRequestDto userDto)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto userDto)
         {
-            try
-            {
-                var result = await _userBL.LoginUserAsync(userDto.Email, userDto.Password);
-                return Ok(new
-                {
-                    token = result.token,
-                    userId = result.UserId,
-                    email = result.Email
-                });
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.LogWarning(ex, "Invalid login attempt");
-                return Unauthorized(new { message = ex.Message });
-            }
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            var result = await _userBL.LoginUserAsync(userDto);
+
+            return Ok(new
+            {
+                userId = result.UserId,
+                email = result.Email
+            });
+        }
         // Update user
         [HttpPut("{userId}")]
         public async Task<IActionResult> UpdateUser(int userId, [FromBody] UserRequestDto userDto)
@@ -94,34 +88,18 @@ namespace FunDooAPP.Controllers
 
         // Forgot password
         [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] UserRequestDto userDto)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            try
-            {
-                await _userBL.ForgetPasswordAsync(userDto.Email, userDto.Password);
-                return Ok(new { message = "Password updated successfully" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in forgot password");
-                return BadRequest(new { message = ex.Message });
-            }
+            await _userBL.ForgetPasswordAsync(dto.Email, dto.NewPassword);
+            return Ok(new { message = "Password updated successfully" });
         }
 
         // Change password
         [HttpPost("change-password/{userId}")]
         public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordDto dto)
         {
-            try
-            {
-                await _userBL.ChangePasswordAsync(userId, dto.OldPassword, dto.NewPassword);
-                return Ok(new { message = "Password changed successfully" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in change password");
-                return BadRequest(new { message = ex.Message });
-            }
+            await _userBL.ChangePasswordAsync(userId, dto.OldPassword, dto.NewPassword);
+            return Ok(new { message = "Password changed successfully" });
         }
 
         // Get user by ID

@@ -1,4 +1,4 @@
-﻿using ModelLayer.DTOs;
+﻿using ModelLayer.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace BessinessLogicLayer.Interface
 {
     public interface IUserBL
     {
-        Task<UserResponseDto>LoginUserAsync(string email,string password);
+        Task<LoginResponseDto>LoginUserAsync(LoginRequestDto loginRequestDto);
         Task<UserResponseDto> RegisterUserAsync(UserRequestDto userRequestDto);
         Task<UserResponseDto> UpdateUserAsync(int UserId,UserRequestDto userRequestDto);
 

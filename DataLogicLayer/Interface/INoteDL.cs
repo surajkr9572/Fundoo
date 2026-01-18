@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataLogicLayer.Interface
 {
-    public interface INoteBL
+    public interface INoteDL
     {
         Task<Note>CreateNoteAsync(Note note);
 

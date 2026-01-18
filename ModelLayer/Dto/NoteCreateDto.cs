@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ModelLayer.DTOs
 {
-    public class NoteRequestDto
+    public class NoteCreateDto
     {
         [Required(ErrorMessage = "Title is required")]
         [MaxLength(255, ErrorMessage = "Title cannot exceed 255 characters")]

@@ -14,7 +14,7 @@
       },
       {
         "Name": "userDto",
-        "Type": "ModelLayer.DTOs.UserRequestDto",
+        "Type": "ModelLayer.Dto.UserRequestDto",
         "IsRequired": true
       }
     ],
@@ -66,8 +66,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userDto",
-        "Type": "ModelLayer.DTOs.UserRequestDto",
+        "Name": "dto",
+        "Type": "ModelLayer.Dto.ForgotPasswordDto",
         "IsRequired": true
       }
     ],
@@ -83,7 +83,7 @@
     "Parameters": [
       {
         "Name": "userDto",
-        "Type": "ModelLayer.DTOs.UserRequestDto",
+        "Type": "ModelLayer.Dto.LoginRequestDto",
         "IsRequired": true
       }
     ],
@@ -99,7 +99,7 @@
     "Parameters": [
       {
         "Name": "userDto",
-        "Type": "ModelLayer.DTOs.UserRequestDto",
+        "Type": "ModelLayer.Dto.UserRequestDto",
         "IsRequired": true
       }
     ],

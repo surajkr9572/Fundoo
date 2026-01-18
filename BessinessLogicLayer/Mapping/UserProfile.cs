@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ModelLayer.DTOs;
+using ModelLayer.Dto;
 using ModelLayer.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace UserManagement.BLL.Mapping
         {
             CreateMap<User,UserResponseDto>().ReverseMap();
             CreateMap<UserRequestDto, User>();
+            CreateMap<User, LoginResponseDto>();
         }
     }
 }

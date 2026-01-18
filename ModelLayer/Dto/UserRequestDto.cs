@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ModelLayer.DTOs
+namespace ModelLayer.Dto
 {
     public class UserRequestDto
     {

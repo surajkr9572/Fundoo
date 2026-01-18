@@ -12,19 +12,14 @@ namespace ModelLayer.DTOs
 
         public DateTime? Reminder { get; set; }
 
-        public string? Colour { get; set; }
-
-        public string? Image { get; set; }
-
+        public string Colour { get; set; }
         public bool IsArchive { get; set; }
         public bool IsPin { get; set; }
         public bool IsTrash { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+
 
         public int UserId { get; set; }
-        public List<string>? Labels { get; set; }
-        public List<string>? Collaborators { get; set; }
     }
 }

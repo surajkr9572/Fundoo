@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.Dto
 {
-    public class ChangePasswordDto
+    public class ForgotPasswordDto
     {
         [Required]
-        public string OldPassword { get; set; } = null!;
+        [EmailAddress]
+        public string Email { get; set; } = null!;
 
         [Required]
         [MinLength(6)]

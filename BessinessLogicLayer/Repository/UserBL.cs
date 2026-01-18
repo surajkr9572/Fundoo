@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLogicLayer.Interface;
+using ModelLayer.Dto;
 
 namespace BessinessLogicLayer.Repository
 {
@@ -24,13 +25,17 @@ namespace BessinessLogicLayer.Repository
             _mapper = mapper;
         }
 
-        public async Task<UserResponseDto> LoginUserAsync(string email, string password)
+        public async Task<LoginResponseDto> LoginUserAsync(LoginRequestDto loginRequestDto)
         {
-            var user = await _userdl.GetUserByEmailAsync(email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
-                throw new InvalidOperationException("Invalid email or password");
+            var user = await _userdl.GetUserByEmailAsync(loginRequestDto.Email);
 
-            return _mapper.Map<UserResponseDto>(user);
+            if (user == null)
+                throw new UnauthorizedAccessException("Invalid email or password");
+
+            if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password))
+                throw new UnauthorizedAccessException("Invalid email or password");
+
+            return _mapper.Map<LoginResponseDto>(user);
         }
 
         public async Task<UserResponseDto> RegisterUserAsync(UserRequestDto userRequestDto)
@@ -78,10 +83,11 @@ namespace BessinessLogicLayer.Repository
         public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
         {
             var user = await _userdl.GetUserByIdAsync(userId);
-            if (user == null) throw new Exception($"User {userId} not found.");
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
 
             if (!BCrypt.Net.BCrypt.Verify(oldPassword, user.Password))
-                throw new InvalidOperationException("Old password is incorrect.");
+                throw new UnauthorizedAccessException("Old password is incorrect");
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.ChangedAt = DateTime.UtcNow;
@@ -93,7 +99,8 @@ namespace BessinessLogicLayer.Repository
         public async Task<bool> ForgetPasswordAsync(string email, string newPassword)
         {
             var user = await _userdl.GetUserByEmailAsync(email);
-            if (user == null) throw new Exception($"User not found");
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
             user.ChangedAt = DateTime.UtcNow;
@@ -104,8 +111,10 @@ namespace BessinessLogicLayer.Repository
 
         public async Task<UserResponseDto> GetUserByIdAsync(int userId)
         {
+
             var user = await _userdl.GetUserByIdAsync(userId);
-            if (user == null) throw new Exception("User not found");
+            if (user == null)
+                throw new KeyNotFoundException($"User {userId} not found");
 
             return _mapper.Map<UserResponseDto>(user);
         }

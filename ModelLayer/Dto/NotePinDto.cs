@@ -7,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace ModelLayer.Dto
 {
-    public class ChangePasswordDto
+    public class NotePinDto
     {
         [Required]
-        public string OldPassword { get; set; } = null!;
-
-        [Required]
-        [MinLength(6)]
-        public string NewPassword { get; set; } = null!;
+        public bool IsPin { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿using BessinessLogicLayer.Interface;
-using DataLogicLayer.Data;
+﻿using DataLogicLayer.Data;
+using DataLogicLayer.Interface;
 using Microsoft.EntityFrameworkCore;
 using ModelLayer.Entities;
 using System;
@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BessinessLogicLayer.Repository
+namespace DataLogicLayer.Repository
 {
-    public class UserBL : IUserBL
+    public class UserDL : IUserDL
     {
         private readonly ApplicationDbContext context;
 
-        public UserBL(ApplicationDbContext context)
+        public UserDL(ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -41,6 +41,14 @@ namespace BessinessLogicLayer.Repository
         public async Task<User> GetUserByIdAsync(int UserId)
         {
             return await context.Users.FirstOrDefaultAsync(e => e.UserId == UserId);
+        }
+        public async Task<User> UpdateUserByAsync(User user)
+        {
+            var existuser = await context.Users.FindAsync(user.UserId);
+            if (existuser == null) return null;
+            context.Users.Update(user);   
+            await context.SaveChangesAsync();
+            return user;
         }
     }
 }

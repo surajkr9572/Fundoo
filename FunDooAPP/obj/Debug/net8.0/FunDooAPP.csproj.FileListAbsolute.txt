@@ -16,7 +16,6 @@ D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.GeneratedMSBuildEditorConfig.edit
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.AssemblyInfoInputs.cache
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.AssemblyInfo.cs
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.csproj.CoreCompileInputs.cache
-D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.MvcApplicationPartsAssemblyInfo.cs
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.MvcApplicationPartsAssemblyInfo.cache
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.sourcelink.json
 D:\fundoo\FunDooAPP\obj\Debug\net8.0\rjimswa.dswa.cache.json
