@@ -15,7 +15,7 @@ namespace UserManagement.BLL.Mapping
         {
             CreateMap<User,UserResponseDto>().ReverseMap();
             CreateMap<UserRequestDto, User>();
-            CreateMap<User, LoginResponseDto>();
+           
         }
     }
 }

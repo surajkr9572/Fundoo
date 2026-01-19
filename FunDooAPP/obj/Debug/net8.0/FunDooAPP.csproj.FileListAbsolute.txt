@@ -151,3 +151,4 @@ D:\fundoo\FunDooAPP\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBear
 D:\fundoo\FunDooAPP\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
 D:\fundoo\FunDooAPP\bin\Debug\net8.0\BessinessLogicLayer.dll
 D:\fundoo\FunDooAPP\bin\Debug\net8.0\BessinessLogicLayer.pdb
+D:\fundoo\FunDooAPP\obj\Debug\net8.0\FunDooAPP.MvcApplicationPartsAssemblyInfo.cs

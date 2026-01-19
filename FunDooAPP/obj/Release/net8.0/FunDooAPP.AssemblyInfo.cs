@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FunDooAPP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+59e3e6022b01c7a41a8a8f8565e9850e3793cde0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0237974a971f5b746182dbad580674381beaaae0")]
 [assembly: System.Reflection.AssemblyProductAttribute("FunDooAPP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FunDooAPP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

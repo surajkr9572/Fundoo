@@ -104,5 +104,21 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "FunDooAPP.Controllers.UsersController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/Users/Reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "ModelLayer.Dto.ResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

@@ -1,7 +1,10 @@
 ﻿using BessinessLogicLayer.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Dto;
 using ModelLayer.DTOs;
+using System.Security.Claims;
 
 namespace FunDooAPP.Controllers
 {
@@ -11,11 +14,13 @@ namespace FunDooAPP.Controllers
     {
         private readonly IUserBL _userBL;
         private readonly ILogger<UsersController> _logger;
+        private readonly IEmailSender _emailSender;
 
-        public UsersController(IUserBL userBL, ILogger<UsersController> logger)
+        public UsersController(IUserBL userBL, ILogger<UsersController> logger,IEmailSender emailsender)
         {
             _userBL = userBL;
             _logger = logger;
+            _emailSender = emailsender;
         }
 
         // Register user
@@ -28,6 +33,7 @@ namespace FunDooAPP.Controllers
             try
             {
                 var result = await _userBL.RegisterUserAsync(userDto);
+                await _emailSender.SendEmailAsync(result.Email, "Registration Successful", $"<h3>Hello {result.Email},</h3><p>You have registered successfully.</p>");
                 return Created("", new
                 {
                     userId = result.UserId,
@@ -58,6 +64,7 @@ namespace FunDooAPP.Controllers
 
             return Ok(new
             {
+                token=result.Token,
                 userId = result.UserId,
                 email = result.Email
             });
@@ -90,18 +97,33 @@ namespace FunDooAPP.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            await _userBL.ForgetPasswordAsync(dto.Email, dto.NewPassword);
-            return Ok(new { message = "Password updated successfully" });
+
+            await _userBL.ForgetPasswordAsync(dto.Email);
+            return Ok(new { message = "Email Send Successfully" });
         }
 
         // Change password
+        [Authorize]
         [HttpPost("change-password/{userId}")]
         public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordDto dto)
         {
             await _userBL.ChangePasswordAsync(userId, dto.OldPassword, dto.NewPassword);
             return Ok(new { message = "Password changed successfully" });
         }
-
+        //Reset password
+        [Authorize]
+        [HttpPost("Reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            if (dto.NewPassword != dto.confirmPassword)
+            {
+                return BadRequest(new {message="Password do not match"});
+            }
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (userId == null) return BadRequest(new { message = "User not found" });
+            await _userBL.ResetPasswordAsync(userId,dto.NewPassword);
+            return Ok(new { message = "Reset Password Successfully" });
+        }
         // Get user by ID
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)

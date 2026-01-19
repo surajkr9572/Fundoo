@@ -15,10 +15,10 @@ namespace BessinessLogicLayer.Interface
 
 
         Task<bool>ChangePasswordAsync(int UserId,string oldPassword,string newPassword);
-        Task<bool> ForgetPasswordAsync(string email,string newPassword);
+        Task<bool> ForgetPasswordAsync(string email);
 
         Task<UserResponseDto> GetUserByIdAsync(int  UserId);
-
+        Task<bool> ResetPasswordAsync(int userId, string newPassword);
 
     }
 }

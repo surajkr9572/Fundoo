@@ -12,9 +12,5 @@ namespace ModelLayer.Dto
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
-
-        [Required]
-        [MinLength(6)]
-        public string NewPassword { get; set; } = null!;
     }
 }

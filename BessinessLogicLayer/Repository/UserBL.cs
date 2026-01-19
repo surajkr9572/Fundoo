@@ -11,18 +11,23 @@ using System.Text;
 using System.Threading.Tasks;
 using DataLogicLayer.Interface;
 using ModelLayer.Dto;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BessinessLogicLayer.Repository
 {
-    public class UserBL : IUserBL
+    public class UserBL: IUserBL
     {
         private readonly IUserDL _userdl;
         private readonly IMapper _mapper;
+        private readonly IJwtService _jwtService;
+        private readonly IEmailSender _emailSender;
 
-        public UserBL(IUserDL userdl, IMapper mapper)
+        public UserBL(IUserDL userdl, IMapper mapper, IJwtService jwtService, IEmailSender emailsender)
         {
             _userdl = userdl;
             _mapper = mapper;
+            _jwtService = jwtService;
+            _emailSender = emailsender;
         }
 
         public async Task<LoginResponseDto> LoginUserAsync(LoginRequestDto loginRequestDto)
@@ -34,8 +39,14 @@ namespace BessinessLogicLayer.Repository
 
             if (!BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password))
                 throw new UnauthorizedAccessException("Invalid email or password");
+            var jwtToken = _jwtService.GenerateToken(user);
 
-            return _mapper.Map<LoginResponseDto>(user);
+            return new LoginResponseDto
+            {
+                UserId = user.UserId,
+                Email = user.Email,
+                Token = jwtToken
+            };
         }
 
         public async Task<UserResponseDto> RegisterUserAsync(UserRequestDto userRequestDto)
@@ -96,19 +107,29 @@ namespace BessinessLogicLayer.Repository
             return true;
         }
 
-        public async Task<bool> ForgetPasswordAsync(string email, string newPassword)
+        public async Task<bool> ForgetPasswordAsync(string email)
         {
             var user = await _userdl.GetUserByEmailAsync(email);
             if (user == null)
                 throw new KeyNotFoundException("User not found");
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.ChangedAt = DateTime.UtcNow;
-
-            await _userdl.UpdateUserByAsync(user);
+            var jwtToken = _jwtService.GenerateToken(user);
+            await _emailSender.SendEmailAsync(user.Email, "Forget Password", $"<h3>Hello {user.Email} Your Generated token: ,</h3><p>{jwtToken}</p>");
             return true;
         }
 
+        public async Task<bool> ResetPasswordAsync(int userId, string newPassword)
+        {
+            var user=await _userdl.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.ChangedAt = DateTime.UtcNow;
+           await  _userdl.UpdateUserByAsync(user);
+            return true;
+        }
         public async Task<UserResponseDto> GetUserByIdAsync(int userId)
         {
 

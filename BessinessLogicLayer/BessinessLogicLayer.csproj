@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DataLogicLayer\DataLogicLayer.csproj" />
     <ProjectReference Include="..\ModelLayer\ModelLayer.csproj" />
   </ItemGroup>
