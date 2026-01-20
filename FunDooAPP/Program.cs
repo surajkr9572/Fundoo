@@ -1,6 +1,7 @@
 
 using BessinessLogicLayer.Helpers;
 using BessinessLogicLayer.Interface;
+using BessinessLogicLayer.Mapping;
 using BessinessLogicLayer.Repository;
 using BessinessLogicLayer.Validators;
 using DataLogicLayer.Data;
@@ -41,16 +42,20 @@ namespace FunDooAPP
             // 3. Add Repository Pattern
             // ------------------------------
             builder.Services.AddScoped<IUserDL, UserDL>();
+            builder.Services.AddScoped<INoteDL, NoteDL>();
+
 
             // ------------------------------
             // 4. Add Business Logic Services
             // ------------------------------
             builder.Services.AddScoped<IUserBL, UserBL>();
+            builder.Services.AddScoped<INoteBL, NoteBL>();
 
             // ------------------------------
             // 5. Add AutoMapper
             // ------------------------------
             builder.Services.AddAutoMapper(typeof(UserProfile));
+            builder.Services.AddAutoMapper(typeof(NoteProfile));
 
             // ------------------------------
             // 6. Add FluentValidation

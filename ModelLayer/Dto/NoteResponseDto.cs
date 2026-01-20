@@ -1,6 +1,6 @@
 ﻿    using System;
 
-namespace ModelLayer.DTOs
+namespace ModelLayer.Dto
 {
     public class NoteResponseDto
     {
@@ -10,7 +10,7 @@ namespace ModelLayer.DTOs
 
         public string Description { get; set; } 
 
-        public DateTime? Reminder { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         public string Colour { get; set; }
         public bool IsArchive { get; set; }
@@ -20,6 +20,6 @@ namespace ModelLayer.DTOs
         public DateTime CreatedAt { get; set; }
 
 
-        public int UserId { get; set; }
+        
     }
 }

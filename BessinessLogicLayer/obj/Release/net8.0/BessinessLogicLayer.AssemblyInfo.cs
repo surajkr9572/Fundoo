@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BessinessLogicLayer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0237974a971f5b746182dbad580674381beaaae0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1baadf0afe3ae6199991c646c43402bf7df7f1d")]
 [assembly: System.Reflection.AssemblyProductAttribute("BessinessLogicLayer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BessinessLogicLayer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

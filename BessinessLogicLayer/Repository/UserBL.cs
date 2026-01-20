@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BessinessLogicLayer.Interface;
 using DataLogicLayer.Repository;
-using ModelLayer.DTOs;
+using ModelLayer.Dto;
 using BCrypt.Net;
 using ModelLayer.Entities;
 using System;

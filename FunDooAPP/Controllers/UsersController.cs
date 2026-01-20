@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using ModelLayer.Dto;
-using ModelLayer.DTOs;
 using System.Security.Claims;
 
 namespace FunDooAPP.Controllers
@@ -16,130 +15,206 @@ namespace FunDooAPP.Controllers
         private readonly ILogger<UsersController> _logger;
         private readonly IEmailSender _emailSender;
 
-        public UsersController(IUserBL userBL, ILogger<UsersController> logger,IEmailSender emailsender)
+        public UsersController(
+            IUserBL userBL,
+            ILogger<UsersController> logger,
+            IEmailSender emailSender)
         {
             _userBL = userBL;
             _logger = logger;
-            _emailSender = emailsender;
+            _emailSender = emailSender;
         }
 
-        // Register user
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRequestDto userDto)
+        public async Task<ActionResult<ApiResponse<UserResponseDto>>> Register(
+            [FromBody] UserRequestDto userDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToArray();
+
+                return BadRequest(new ApiResponse<UserResponseDto>(
+                    false,
+                    "Validation failed",
+                    errors));
+            }
 
             try
             {
                 var result = await _userBL.RegisterUserAsync(userDto);
-                await _emailSender.SendEmailAsync(result.Email, "Registration Successful", $"<h3>Hello {result.Email},</h3><p>You have registered successfully.</p>");
-                return Created("", new
-                {
-                    userId = result.UserId,
-                    email = result.Email,
-                    message = "User registered successfully"
-                });
+
+                await _emailSender.SendEmailAsync(
+                    result.Email,
+                    "Registration Successful",
+                    $"<h3>Hello {result.Email}</h3><p>You have registered successfully.</p>");
+
+                return Created(string.Empty,
+                    new ApiResponse<UserResponseDto>(
+                        true,
+                        "User registered successfully",
+                        result));
             }
             catch (InvalidOperationException ex)
             {
                 _logger.LogWarning(ex, "Email already exists");
-                return Conflict(new { message = ex.Message });
+
+                return Conflict(new ApiResponse<UserResponseDto>(
+                    false,
+                    ex.Message,
+                    ex.Message));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error registering user");
-                return StatusCode(500, new { message = "An error occurred while creating user" });
+
+                return StatusCode(500, new ApiResponse<UserResponseDto>(
+                    false,
+                    "Internal server error",
+                    "Something went wrong"));
             }
         }
 
-        // Login user
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto userDto)
+        public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(
+            [FromBody] LoginRequestDto userDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                return BadRequest(new ApiResponse<UserResponseDto>(
+                    false,
+                    "Invalid login data",
+                    "Invalid email or password"));
+            }
 
             var result = await _userBL.LoginUserAsync(userDto);
 
-            return Ok(new
-            {
-                token=result.Token,
-                userId = result.UserId,
-                email = result.Email
-            });
+            return Ok(new ApiResponse<LoginResponseDto>(
+                true,
+                "Login successful",
+                result));
         }
-        // Update user
+
+
         [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(int userId, [FromBody] UserRequestDto userDto)
+        public async Task<ActionResult<ApiResponse<UserResponseDto>>> UpdateUser(
+            int userId,
+            [FromBody] UserRequestDto userDto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                return BadRequest(new ApiResponse<UserResponseDto>(
+                    false,
+                    "Validation failed",
+                    "Invalid user data"));
+            }
 
             try
             {
                 var result = await _userBL.UpdateUserAsync(userId, userDto);
-                return Ok(result);
+
+                return Ok(new ApiResponse<UserResponseDto>(
+                    true,
+                    "User updated successfully",
+                    result));
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogWarning(ex, $"User {userId} not found");
-                return NotFound(new { message = ex.Message });
+                _logger.LogWarning(ex, "User not found");
+
+                return NotFound(new ApiResponse<UserResponseDto>(
+                    false,
+                    ex.Message,
+                    ex.Message));
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogWarning(ex, $"Email conflict for user {userId}");
-                return Conflict(new { message = ex.Message });
+                return Conflict(new ApiResponse<UserResponseDto>(
+                    false,
+                    ex.Message,
+                    ex.Message));
             }
         }
 
-        // Forgot password
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
-        {
 
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult<ApiResponse<object>>> ForgotPassword(
+            [FromBody] ForgotPasswordDto dto)
+        {
             await _userBL.ForgetPasswordAsync(dto.Email);
-            return Ok(new { message = "Email Send Successfully" });
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "Password reset email sent successfully",
+                null));
         }
 
-        // Change password
+
         [Authorize]
         [HttpPost("change-password/{userId}")]
-        public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordDto dto)
+        public async Task<ActionResult<ApiResponse<object>>> ChangePassword(
+            int userId,
+            [FromBody] ChangePasswordDto dto)
         {
-            await _userBL.ChangePasswordAsync(userId, dto.OldPassword, dto.NewPassword);
-            return Ok(new { message = "Password changed successfully" });
+            await _userBL.ChangePasswordAsync(
+                userId,
+                dto.OldPassword,
+                dto.NewPassword);
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "Password changed successfully",
+                null));
         }
-        //Reset password
+
+    
         [Authorize]
-        [HttpPost("Reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<ApiResponse<object>>> ResetPassword(
+            [FromBody] ResetPasswordDto dto)
         {
             if (dto.NewPassword != dto.confirmPassword)
             {
-                return BadRequest(new {message="Password do not match"});
+                return BadRequest(new ApiResponse<object>(
+                    false,
+                    "Password does not match",
+                    "Confirm password mismatch"));
             }
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (userId == null) return BadRequest(new { message = "User not found" });
-            await _userBL.ResetPasswordAsync(userId,dto.NewPassword);
-            return Ok(new { message = "Reset Password Successfully" });
+
+            int userId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            await _userBL.ResetPasswordAsync(userId, dto.NewPassword);
+
+            return Ok(new ApiResponse<object>(
+                true,
+                "Password reset successfully",
+                null));
         }
-        // Get user by ID
+
+ 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        public async Task<ActionResult<ApiResponse<UserResponseDto>>> GetUserById(
+            int userId)
         {
             try
             {
                 var result = await _userBL.GetUserByIdAsync(userId);
-                return Ok(result);
+
+                return Ok(new ApiResponse<UserResponseDto>(
+                    true,
+                    "User retrieved successfully",
+                    result));
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogWarning(ex, $"User {userId} not found");
-                return NotFound(new { message = ex.Message });
+                return NotFound(new ApiResponse<UserResponseDto>(
+                    false,
+                    ex.Message,
+                    ex.Message));
             }
         }
-
-       
     }
 }

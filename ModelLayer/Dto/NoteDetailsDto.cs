@@ -14,8 +14,7 @@ namespace ModelLayer.Dto
         public string Description { get; set; }
         public string Colour { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int UserId { get; set; }
-
+        public DateTime ? Reminder {  get; set; }
         public bool IsPin { get; set; }
         public bool IsArchive { get; set; }
         public bool IsTrash { get; set; }
